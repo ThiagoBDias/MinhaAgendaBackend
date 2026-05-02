@@ -3,23 +3,33 @@ using MinhaAgendaBackend.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Configura o Banco de Dados ANTES de construir o app
+// 1. Configura o Banco de Dados
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 2. Adiciona os controladores (os garçons)
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+// 2. Configura a política de acesso (CORS)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTudo",
+        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+
 var app = builder.Build();
 
-// 3. Configura o que acontece quando o app já está rodando
+// 3. Ativa o CORS ANTES de mapear os controladores
+app.UseCors("PermitirTudo");
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// COMENTE esta linha abaixo para facilitar o acesso pelo celular via IP
+// app.UseHttpsRedirection(); 
+
 app.UseAuthorization();
 app.MapControllers();
 
