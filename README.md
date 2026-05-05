@@ -8,6 +8,14 @@ API REST desenvolvida com ASP.NET Core para gestão de tarefas e compromissos, s
 * **Banco de Dados:** SQL Server / SQLite
 * **Segurança:** Autenticação e Autorização via JWT (JSON Web Token)
 
+## ⚙️ Como executar o projeto
+1. Clone este repositório.
+2. Certifique-se de ter o **SDK do .NET** instalado.
+3. No terminal, dentro da pasta do projeto, execute:
+   ```bash
+   dotnet ef database update
+   dotnet run
+
 ## 🏗️ Diferenciais Técnicos
 * **Padrão Repository:** Separação da lógica de persistência da regra de negócio para facilitar testes e manutenção.
 * **Migrations:** Gerenciamento de versionamento de banco de dados via EF Core para garantir integridade entre ambientes.
@@ -26,10 +34,4 @@ Esta API foi projetada para alimentar o **T-Control**, um aplicativo Android par
 A arquitetura foi pensada para suportar múltiplas requisições simultâneas e garantir a integridade dos dados financeiros e de produtividade do usuário.
 
 
-## ⚙️ Como executar o projeto
-1. Clone este repositório.
-2. Certifique-se de ter o **SDK do .NET** instalado.
-3. No terminal, dentro da pasta do projeto, execute:
-   ```bash
-   dotnet ef database update
-   dotnet run
+
