@@ -1,0 +1,13 @@
+# Pastas de compilação
+bin/
+obj/
+
+# Arquivos do Visual Studio e VS Code
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Banco de dados local (opcional, se quiser que cada um tenha o seu)
+*.db
