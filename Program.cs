@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MinhaAgendaBackend.Data;
+using MinhaAgendaBackend.Repositories;
+using MinhaAgendaBackend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
