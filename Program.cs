@@ -17,6 +17,10 @@ builder.Services.AddCors(options =>
         policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
+// Registrando as camadas para Injeção de Dependência
+builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
+builder.Services.AddScoped<IAtividadeService, AtividadeService>();
+
 var app = builder.Build();
 
 // 3. Ativa o CORS ANTES de mapear os controladores
