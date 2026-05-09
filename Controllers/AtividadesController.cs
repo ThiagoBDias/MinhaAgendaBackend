@@ -7,6 +7,7 @@ namespace MinhaAgendaBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // Protege todas as rotas deste controller, exigindo um token JWT válido
     public class AtividadesController : ControllerBase
     {
         private readonly IAtividadeService _service;
