@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MinhaAgendaBackend.DTOs;
 using MinhaAgendaBackend.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MinhaAgendaBackend.Controllers
 {
