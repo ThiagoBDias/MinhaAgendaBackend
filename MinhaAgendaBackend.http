@@ -23,3 +23,13 @@ Content-Type: application/json
   "end": "09:30",
   "cat": "Saúde"
 }
+
+### 3. Teste de Login (Gerar o Token)
+# Objetivo: Enviar o usuário e senha corretos para receber o JWT.
+POST {{MinhaAgendaBackend_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "thiago",
+  "password": "123456"
+}
