@@ -1,6 +1,25 @@
 @MinhaAgendaBackend_HostAddress = http://localhost:5141
 
-GET {{MinhaAgendaBackend_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Teste de Falha (Validação Fail-Fast)
+# Objetivo: Forçar o erro enviando um nome muito curto e sem categoria, para provar que o FluentValidation barra a requisição.
+POST {{MinhaAgendaBackend_HostAddress}}/api/atividades
+Content-Type: application/json
 
-###
+{
+  "name": "A",
+  "start": "08:00",
+  "end": "09:30",
+  "cat": ""
+}
+
+### 2. Teste de Sucesso (Salvando no Banco)
+# Objetivo: Enviar o payload correto. O esperado é um HTTP 201 (Created) e o ID gerado pelo banco.
+POST {{MinhaAgendaBackend_HostAddress}}/api/atividades
+Content-Type: application/json
+
+{
+  "name": "Treino de Luta",
+  "start": "08:00",
+  "end": "09:30",
+  "cat": "Saúde"
+}
