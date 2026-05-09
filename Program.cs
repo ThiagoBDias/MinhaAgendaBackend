@@ -2,6 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using MinhaAgendaBackend.Data;
 using MinhaAgendaBackend.Repositories;
 using MinhaAgendaBackend.Services;
+using FluentValidation;
+using MinhaAgendaBackend.DTOs;
+using MinhaAgendaBackend.Validators;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +28,7 @@ builder.Services.AddCors(options =>
 // Registrando as camadas para Injeção de Dependência
 builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
 builder.Services.AddScoped<IAtividadeService, AtividadeService>();
+builder.Services.AddScoped<IValidator<CreateAtividadeRequest>, CreateAtividadeValidator>();
 
 var app = builder.Build();
 
