@@ -24,6 +24,15 @@ namespace MinhaAgendaBackend.Controllers
             var atividades = await _service.GetAtividadesAsync();
             return Ok(atividades);
         }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(AtividadeResponse), 201)] // Sucesso
+        [ProducesResponseType(400)] // Erro de validação
+        [ProducesResponseType(401)] // Sem Token
+        public async Task<IActionResult> CreateAtividade([FromBody] CreateAtividadeRequest request)
+        {
+            // ... (mantenha o código que já está aqui dentro)
+            
         
         [HttpPost]
         public async Task<IActionResult> CreateAtividade([FromBody] CreateAtividadeRequest request)
