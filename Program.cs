@@ -2,7 +2,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 using FluentValidation;
 using MinhaAgendaBackend.Data;
 using MinhaAgendaBackend.DTOs;
@@ -12,6 +11,9 @@ using MinhaAgendaBackend.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ============================================================
+// 1. CONFIGURAÇÃO DE SEGURANÇA (JWT)
+// ============================================================
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var secret = builder.Configuration["JwtConfig:Secret"] 
@@ -32,40 +34,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// ============================================================
+// 2. SERVIÇOS E INFRAESTRUTURA
+// ============================================================
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "T-Control API", 
-        Version = "v1" 
-    });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Insira o token JWT. Exemplo: Bearer {seu_token}"
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            },
-            new List<string>() 
-        }
-    });
-});
+// Swagger Padrão (Sem o cadeado visual problemático do .NET 10)
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
@@ -73,21 +52,24 @@ builder.Services.AddCors(options =>
         policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
+// ============================================================
+// 3. INJEÇÃO DE DEPENDÊNCIA
+// ============================================================
 builder.Services.AddScoped<IAtividadeRepository, AtividadeRepository>();
 builder.Services.AddScoped<IAtividadeService, AtividadeService>();
 builder.Services.AddScoped<IValidator<CreateAtividadeRequest>, CreateAtividadeValidator>();
 
 var app = builder.Build();
 
+// ============================================================
+// 4. PIPELINE DE EXECUÇÃO
+// ============================================================
 app.UseCors("PermitirTudo");
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "T-Control API v1");
-        c.RoutePrefix = "swagger"; 
-    });
+    app.UseSwaggerUI();
 }
 
 app.UseAuthentication(); 
