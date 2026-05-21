@@ -7,7 +7,7 @@ namespace MinhaAgendaBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // O Escudo do JWT
+    [Authorize]
     public class AtividadesController : ControllerBase
     {
         private readonly IAtividadeService _service;
@@ -25,32 +25,20 @@ namespace MinhaAgendaBackend.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(AtividadeResponse), 201)] // Sucesso
-        [ProducesResponseType(400)] // Erro de validação
-        [ProducesResponseType(401)] // Sem Token
+        [ProducesResponseType(typeof(AtividadeResponse), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> CreateAtividade([FromBody] CreateAtividadeRequest request)
         {
             try
             {
                 var novaAtividade = await _service.CreateAtividadeAsync(request);
-                return StatusCode(201, novaAtividade); // HTTP 201 (Criado)
+                return StatusCode(201, novaAtividade);
             }
             catch (FluentValidation.ValidationException ex)
             {
-                // Se a validação falhar, devolve HTTP 400 com os erros exatos
                 return BadRequest(new { erros = ex.Errors.Select(e => e.ErrorMessage) });
             }
-        }
-
-        [HttpPatch("{id}/toggle-status")]
-        public async Task<IActionResult> ToggleStatus(int id)
-        {
-            var sucesso = await _service.ToggleConclusaoAsync(id);
-            
-            if (!sucesso)
-                return NotFound(new { mensagem = "Atividade não encontrada." });
-
-            return NoContent(); // HTTP 204: Sucesso, sem corpo de resposta
         }
     }
 }
