@@ -1,18 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinhaAgendaBackend.DTOs;
 using MinhaAgendaBackend.Services;
-using Microsoft.AspNetCore.Authorization;
 
 namespace MinhaAgendaBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // Protege todas as rotas deste controller, exigindo um token JWT válido
+    [Authorize] // O Escudo do JWT
     public class AtividadesController : ControllerBase
     {
         private readonly IAtividadeService _service;
 
-        // Injeção de Dependência: o .NET entrega o Service pronto para uso aqui
         public AtividadesController(IAtividadeService service)
         {
             _service = service;
@@ -31,16 +30,10 @@ namespace MinhaAgendaBackend.Controllers
         [ProducesResponseType(401)] // Sem Token
         public async Task<IActionResult> CreateAtividade([FromBody] CreateAtividadeRequest request)
         {
-            // ... (mantenha o código que já está aqui dentro)
-            
-        
-        [HttpPost]
-        public async Task<IActionResult> CreateAtividade([FromBody] CreateAtividadeRequest request)
-        {
             try
             {
                 var novaAtividade = await _service.CreateAtividadeAsync(request);
-                return StatusCode(201, novaAtividade); // Retorna HTTP 201 (Criado)
+                return StatusCode(201, novaAtividade); // HTTP 201 (Criado)
             }
             catch (FluentValidation.ValidationException ex)
             {
@@ -48,7 +41,16 @@ namespace MinhaAgendaBackend.Controllers
                 return BadRequest(new { erros = ex.Errors.Select(e => e.ErrorMessage) });
             }
         }
-    }
-    
 
+        [HttpPatch("{id}/toggle-status")]
+        public async Task<IActionResult> ToggleStatus(int id)
+        {
+            var sucesso = await _service.ToggleConclusaoAsync(id);
+            
+            if (!sucesso)
+                return NotFound(new { mensagem = "Atividade não encontrada." });
+
+            return NoContent(); // HTTP 204: Sucesso, sem corpo de resposta
+        }
+    }
 }
